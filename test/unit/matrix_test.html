@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Matrix unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  <script src="../assets/ext_assert.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/base/matrix.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests matrix object from <strong>matrix.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[  
+  new Test.Unit.Runner({
+    setup: function() {
+    },
+    
+    teardown: function() {
+    },
+        
+    testCreateMatrixObject: function() { with(this) {
+      var matrix = new Matrix();
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 1 , xy: 0, yx: 0, yy: 1, dx: 0, dy: 0}, matrix)
+    }},
+    
+    testClassMethods: function() { with(this) {
+      var matrix = null;    
+      // Translation
+      matrix = Matrix.translate(100, 200);
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 1 , xy: 0, yx: 0, yy: 1, dx: 100, dy: 200}, matrix)      
+
+      // Rotation
+      matrix = Matrix.rotate(30);
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 0.8660254037844387 , xy: 0.5, yx: -0.5, yy: 0.8660254037844387, dx: 0, dy: 0}, matrix);
+      
+      // Rotation At 
+      matrix = Matrix.rotateAt(30, 100, 200); 
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 0.8660254037844387 , xy: 0.5, yx: -0.5, yy: 0.8660254037844387, dx: -86.60254038, dy: 76.79491924}, matrix);
+      
+      // Mutliply
+      matrix = Matrix.multiply(Matrix.translate(100, 200), Matrix.rotate(30));
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 0.8660254037844387 , xy: 0.5, yx: -0.5, yy: 0.8660254037844387, dx: 100, dy: 200}, matrix);
+      
+      matrix = Matrix.multiply(Matrix.rotate(30), Matrix.translate(100, 200));
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 0.8660254037844387 , xy: 0.5, yx: -0.5, yy: 0.8660254037844387, dx: 186.60254038, dy: 123.20508076}, matrix);
+    }},
+    
+    testInstanceMethods: function() { with(this) {
+      var matrix = null;    
+      // Create
+      matrix = new Matrix();
+      assertInstanceOf(Matrix, matrix);   
+      assertMatrix({xx: 1 , xy: 0, yx: 0, yy: 1, dx: 0, dy: 0}, matrix);
+    }}
+
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>

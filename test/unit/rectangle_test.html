@@ -1,0 +1,81 @@
+                                      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Shape unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  <script src="../assets/ext_assert.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/prototype-graphic.js" type="text/javascript"></script>
+  <script src="../../src/renderer/svg.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests rectangle object from <strong>base/rectangle.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+
+  <div id="whiteboard">
+  </div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+  
+  var renderer = new Graphic.SVGRenderer("whiteboard");
+  new Test.Unit.Runner({
+    setup: function() { 
+    },
+    
+    teardown: function() {
+    },
+        
+    testCreateShapeObject: function() { with(this) {
+      var shape = new Graphic.Rectangle(renderer) ;
+      assertInstanceOf(Graphic.Rectangle, shape);   
+    }},   
+    
+    testLocation: function() { with(this) {
+      var shape = new Graphic.Rectangle(renderer);
+      shape.setLocation(10, 20);
+      assertEqual(10, shape.getLocation().x);
+      assertEqual(20, shape.getLocation().y);
+      
+      assertShapeAttribute({x: 10, y: 20}, shape);
+    }}, 
+
+    testSize: function() { with(this) {
+      var shape = new Graphic.Rectangle(renderer);
+      shape.setSize(10, 20);
+      assertEqual(10, shape.getSize().w);
+      assertEqual(20, shape.getSize().h); 
+      
+      assertShapeAttribute({width: 10, height: 20}, shape);
+    }}, 
+    
+    testRoundCorner: function() { with(this) {
+      var shape = new Graphic.Rectangle(renderer);
+      shape.setRoundCorner(10, 20);
+      assertEqual(10, shape.getRoundCorner().rx);
+      assertEqual(20, shape.getRoundCorner().ry); 
+      
+      assertShapeAttribute({rx: 10, ry: 20}, shape);
+    }}
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>

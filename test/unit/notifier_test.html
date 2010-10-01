@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Shape unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/base/event_notifier.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests EventNotifier object from <strong>base/event_notifier.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+  <div id="console" style="width:698px; height:400px; border:1px solid #000;margin-top:10px"> </div>
+
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+  function log(message) {   
+    message = message || ""
+    $('console').innerHTML += message + "<br/>"
+  }
+  
+  new Test.Unit.Runner({
+    setup: function() { 
+      var ObserverModule =  {   
+        received: 0,                      
+        onCustomEvent: function(sender, options) {
+          if (sender)
+            log(this.name + " received onCustomEvent from sender " + sender.name)
+          else
+            log(this.name + " received onCustomEvent from null sender ");
+          this.received++;
+        }
+      };
+
+      var ObserverModule2 =  {   
+        onCustomEvent2: function(sender, options) {
+          if (sender)
+            log(this.name + " received onCustomEvent2 from sender " + sender.name)
+          else
+            log(this.name + " received onCustomEvent2 from null sender ");
+          this.received++;
+        }
+      };                
+      
+      this.myObserver1 = Object.extend({name: "observer1"}, ObserverModule);
+      this.myObserver2 = Object.extend({name: "observer2"}, ObserverModule);
+      this.myObserver3 = Object.extend({name: "observer3"}, ObserverModule);    
+      this.myObserver3 = Object.extend(this.myObserver3, ObserverModule2);    
+      
+      this.sender1 = {name: "sender1"};
+      this.sender2 = {name: "sender2"};
+    },
+    
+    teardown: function() { 
+      EventNotifier.observers.clear();
+    },
+        
+    testAddObserver: function() { with(this) {   
+      EventNotifier.addObserver(myObserver1);
+      assertEqual(1, EventNotifier.observers.length);
+
+      EventNotifier.addObserver(myObserver2);
+      assertEqual(2, EventNotifier.observers.length);
+
+      EventNotifier.addObserver(myObserver2);
+      assertEqual(2, EventNotifier.observers.length);
+    }},
+    
+    testRemoveObserver: function() { with(this) { 
+      [myObserver1, myObserver2, myObserver3].each(function (obs){
+        EventNotifier.addObserver(obs);
+      })
+      assertEqual(3, EventNotifier.observers.length);
+
+      EventNotifier.removeObserver(myObserver3);
+      assertEqual(2, EventNotifier.observers.length);
+
+      EventNotifier.removeObserver(myObserver3);
+      assertEqual(2, EventNotifier.observers.length);
+    }},
+
+    testSendEvent: function() { with(this) {     
+      EventNotifier.addObserver(myObserver1, sender1);
+      EventNotifier.addObserver(myObserver2);
+      EventNotifier.addObserver(myObserver3);
+      
+      log("Message <em>onCustomEvent</em> sent from sender1");
+      EventNotifier.send(sender1, "onCustomEvent"); 
+      [myObserver1, myObserver2, myObserver3].each(function (obs){
+        assertEqual(1, obs.received);        
+      });
+      
+      log();log("Message <em>onCustomEvent</em> sent from sender2");
+      EventNotifier.send(sender2, "onCustomEvent"); 
+      [myObserver2, myObserver3].each(function (obs){
+        assertEqual(2, obs.received);        
+      });
+      assertEqual(1, myObserver1.received);        
+
+      log();log("Message <em>onCustomEvent</em> sent from null");
+      EventNotifier.send(null, "onCustomEvent"); 
+      [myObserver2, myObserver3].each(function (obs){
+        assertEqual(3, obs.received);        
+      });
+      assertEqual(1, myObserver1.received);
+      
+      log();log("Message <em>onCustomEvent2</em> sent from null");
+      EventNotifier.send(null, "onCustomEvent2"); 
+      assertEqual(1, myObserver1.received);
+      assertEqual(3, myObserver2.received);
+      assertEqual(4, myObserver3.received);
+    }},
+    
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>

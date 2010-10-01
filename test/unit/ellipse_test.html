@@ -1,0 +1,73 @@
+                                      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Shape unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  <script src="../assets/ext_assert.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/prototype-graphic.js" type="text/javascript"></script>
+  <script src="../../src/renderer/svg.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests ellipse object from <strong>base/ellipse.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+
+  <div id="whiteboard">
+  </div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+  
+  var renderer = new Graphic.SVGRenderer("whiteboard");
+  new Test.Unit.Runner({
+    setup: function() { 
+    },
+    
+    teardown: function() {
+    },
+        
+    testCreateShapeObject: function() { with(this) {
+      var shape = new Graphic.Ellipse(renderer) ;
+      assertInstanceOf(Graphic.Ellipse, shape);   
+    }},   
+    
+    testLocation: function() { with(this) {
+      var shape = new Graphic.Ellipse(renderer);
+      shape.setLocation(10, 20);
+      assertEqual(10, shape.getLocation().x);
+      assertEqual(20, shape.getLocation().y);
+      
+      assertShapeAttribute({cx: 10, cy: 20}, shape);
+    }}, 
+
+    testSize: function() { with(this) {
+      var shape = new Graphic.Ellipse(renderer);
+      shape.setSize(10, 20);
+      assertEqual(10, shape.getSize().w);
+      assertEqual(20, shape.getSize().h); 
+      
+      assertShapeAttribute({cx: 5, cy: 10, rx: 5, ry: 10}, shape);
+    }}
+    
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>

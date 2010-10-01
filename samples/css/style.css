@@ -1,0 +1,59 @@
+body {
+  margin:0;
+  padding:0;
+  background: #DAEE9B;
+}
+
+#content {
+  text-align:center;
+  margin: 10px auto;
+  width:  800px; 
+}
+
+#whiteboard {  
+  width:  800px;
+  height: 800px;
+  text-align:left;
+  background:#363636;
+  border:none;
+}    
+
+.no-border {
+  border:none;
+}    
+
+a.selected:hover, a.unselected:hover {
+  text-decoration: underline;
+}  
+
+a.selected  {
+  padding:5px 10px;
+  background: #00A1BE;
+  color:#FFF;   
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a.unselected  {
+  color: #00A1BE;   
+  padding:5px 10px;
+  text-decoration: none;
+}
+
+.disabled {
+  padding:5px 10px;
+  color:#888;
+}       
+
+.clear {
+  clear:both;
+}
+
+a {
+  color: #00A1BE;   
+  text-decoration: none;
+} 
+
+a:hover {
+  text-decoration: underline;
+}            

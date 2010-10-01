@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Shape unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  <script src="../assets/ext_assert.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/prototype-graphic.js" type="text/javascript"></script>
+  <script src="../../src/renderer/svg.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests shape object from <strong>base/shape.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+
+  <div id="whiteboard">
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+  var renderer = new Graphic.SVGRenderer("whiteboard");
+  new Test.Unit.Runner({
+    setup: function() { 
+    },
+    
+    teardown: function() {
+    },
+        
+    testCreateShapeObject: function() { with(this) {
+      var shape = new Graphic.Shape(renderer)
+      assertInstanceOf(Graphic.Shape, shape);   
+    }},
+    
+    testGetSetID: function() { with(this) {
+      var shape = new Graphic.Shape(renderer);
+      shape.setID("my_id")
+      assertEqual("my_id", shape.getID());   
+    }},
+
+    testGetSetClassName: function() { with(this) {
+      var shape = new Graphic.Shape(renderer);
+      shape.setClassName("my_className")
+      assertEqual("my_className", shape.getClassName());   
+    }}, 
+    
+    testFillAttribute: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertEqual("none", shape.getFill());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setFill({r:1, g:2, b:3});
+      assertEqual("rgb(1,2,3)", shape.getFill());   
+      assertEqual(1, shape.getFillOpacity());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setFill({r:1, g:2, b:3, a: 128});
+      assertEqual("rgb(1,2,3)", shape.getFill());   
+      assertEqual(0.5, shape.getFillOpacity().toFixed(2));   
+            
+      shape = new Graphic.Shape(renderer);
+      shape.setFill();
+      assertEqual("none", shape.getFill());   
+      assertEqual(0, shape.getFillOpacity().toFixed(2));   
+    }},
+    
+    testStrokeAttribute: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertEqual("none", shape.getStroke());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setStroke({r:1, g:2, b:3});
+      assertEqual("rgb(1,2,3)", shape.getStroke());   
+      assertEqual(1, shape.getStrokeOpacity());   
+      assertEqual(1, shape.getStrokeWidth());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setStroke({r:1, g:2, b:3, a: 128});
+      assertEqual("rgb(1,2,3)", shape.getStroke());   
+      assertEqual(0.5, shape.getStrokeOpacity().toFixed(2));   
+      assertEqual(1, shape.getStrokeWidth());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setStroke({r:1, g:2, b:3, a: 128, w:3});
+      assertEqual("rgb(1,2,3)", shape.getStroke());   
+      assertEqual(0.5, shape.getStrokeOpacity().toFixed(2));   
+      assertEqual(3, shape.getStrokeWidth());   
+      
+      shape = new Graphic.Shape(renderer);
+      shape.setStroke();
+      assertEqual("none", shape.getStroke());   
+      assertEqual(0, shape.getStrokeOpacity().toFixed(2));   
+      assertEqual(0, shape.getStrokeWidth());   
+    }},
+    
+    testAntiAliasing: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertEqual(false, shape.getAntialiasing());   
+
+      shape = new Graphic.Shape(renderer);
+      shape.setAntialiasing(true)
+      assertEqual(true, shape.getAntialiasing());   
+    }},
+    
+    testAbstractFunction: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertRaise("functionMustBeOverriden", function() {shape.setBounds(0,0,10,10)});
+      assertRaise("functionMustBeOverriden", function() {shape.getBounds()});
+      assertRaise("functionMustBeOverriden", function() {shape.setSize(10, 10)});
+      assertRaise("functionMustBeOverriden", function() {shape.getSize()});
+      assertRaise("functionMustBeOverriden", function() {shape.setLocation(10, 10)});
+      assertRaise("functionMustBeOverriden", function() {shape.getLocation()});
+    }},
+    
+    testGeometricTransform: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Rectangle(renderer);
+      shape.setSize(100, 200)
+      assertMatrix(new Matrix(), shape.getMatrix())
+
+      shape = new Graphic.Rectangle(renderer);
+      shape.setSize(100, 200)
+      shape.rotate(30);
+      assertMatrix(Matrix.rotateAt(30, 50, 100), shape.getMatrix())
+ 
+      shape = new Graphic.Rectangle(renderer);
+      shape.setSize(100, 200)
+      shape.rotate(30, 10, 20);
+      assertMatrix(Matrix.rotateAt(30, 10, 20), shape.getMatrix())
+
+      shape = new Graphic.Rectangle(renderer);
+      shape.setSize(100, 200)
+      shape.translate(100, 50)
+      assertMatrix(Matrix.translate(100, 50), shape.getMatrix())
+
+      shape = new Graphic.Rectangle(renderer);
+      shape.setSize(100, 200)
+      shape.rotate(30);
+      shape.translate(100, 50)
+      assertMatrix(Matrix.rotateAt(30, 50, 100).multiplyRight(Matrix.translate(100, 50)), shape.getMatrix())
+    }},
+    
+    testMatrix: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertMatrix({xx:1 , xy: 0, yx: 0, yy: 1, dx: 0, dy:0 }, shape.getMatrix()); 
+      
+      shape.setMatrix({xx:1 , xy: 2, yx: 3, yy: 4, dx: 5, dy:6 });
+      assertMatrix({xx:1 , xy: 2, yx: 3, yy: 4, dx: 5, dy:6 }, shape.getMatrix()); 
+    }},
+    
+    testMatrix: function() { with(this) {
+      var shape = null;
+      shape = new Graphic.Shape(renderer);
+      assertMatrix({xx:1 , xy: 0, yx: 0, yy: 1, dx: 0, dy:0 }, shape.getMatrix()); 
+      
+      shape.setMatrix({xx:1 , xy: 2, yx: 3, yy: 4, dx: 5, dy:6 });
+      assertMatrix({xx:1 , xy: 2, yx: 3, yy: 4, dx: 5, dy:6 }, shape.getMatrix()); 
+    }}
+    
+  }, "testlog");
+// ]]>
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script src="../lib/prototype.js" type="text/javascript"></script>
+
+  <script src="../src/prototype-graphic.js?include=tools" type="text/javascript"></script>
+  <script src="../src/renderer/svg.js" type="text/javascript"></script>
+  <script src="../src/renderer/vml.js" type="text/javascript"></script>
+  <script src="../src/renderer/canvas.js" type="text/javascript"></script>
+  <script src="tools/line_tool.js" type="text/javascript"></script>
+  <script src="tools/rectangle_tool.js" type="text/javascript"></script>
+  <script src="tools/circle_tool.js" type="text/javascript"></script>
+  <script src="tools/polyline_tool.js" type="text/javascript"></script>
+
+  <script src="js/test.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="css/tool.css" type="text/css" />  
+	<title>Test SVG Renderer</title>
+</head>
+
+<body>
+  <div id="content" > 
+  <h1>Drawing tool</h1><span id="info"></span>  
+    <script type="text/javascript">  
+      var ToolManager = null;        
+      var LineTool = null;
+      var RectangleTool = null;
+      function display(renderer) {
+        if (ToolManager)
+          ToolManager.setRenderer(renderer);
+        else {
+          ToolManager    = new Graphic.ToolManager(renderer); 
+          LineTool       = new Graphic.LineTool();
+          RectangleTool  = new Graphic.RectangleTool();
+          CircleTool     = new Graphic.CircleTool();
+          PolylineTool   = new Graphic.PolylineTool();
+          ToolManager.setTool(LineTool);   
+        }
+      }
+      
+      function setTool(href) {
+        $$("ul li a").invoke('removeClassName', 'selected');
+        $(href).addClassName("selected");
+        switch(href.id) {
+          case "line_tool":
+            ToolManager.setTool(LineTool);
+            break;
+          case "rect_tool":
+            ToolManager.setTool(RectangleTool);
+            break;
+          case "circle_tool":
+            ToolManager.setTool(CircleTool);
+            break;
+          case "polyline_tool":
+            ToolManager.setTool(PolylineTool);
+            PolylineTool.setUsePolygon(false);
+            break;
+          case "polygon_tool":
+            ToolManager.setTool(PolylineTool);
+            PolylineTool.setUsePolygon(true);
+            break;
+        }
+      }
+      
+      function updateRendererSize(event) {
+        var info = getWindowScroll(window);
+        var size = ToolManager.renderer.getSize()     
+        ToolManager.renderer.setSize(info.width, size.height)
+      }
+      addSelectRenderer(display, true);
+      Event.observe(window, "resize", updateRendererSize);
+      
+    </script>
+
+    <ul>
+      <li class="first"><a id="line_tool"     href="#" onclick="setTool(this); return false" class="selected" >Line</a></li>
+      <li><a id="rect_tool"     href="#" onclick="setTool(this); return false">Rectangle</a></li>
+      <li><a id="circle_tool"   href="#" onclick="setTool(this); return false">Circle</a></li>
+      <li><a id="polyline_tool" href="#" onclick="setTool(this); return false">Polyline</a></li>
+      <li><a id="polygon_tool"  href="#" onclick="setTool(this); return false">Polygon</a></li>
+    </ul>     
+    <br class="clear"/>
+    <div id="whiteboard" style="background:url('images/map.png')" unselectable="on" class="tool">
+    </div>
+  </div>
+</body>
+</html>

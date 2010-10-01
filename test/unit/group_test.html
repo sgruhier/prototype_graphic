@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Shape unit test</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript"></script>
+  <script src="../assets/unittest.js" type="text/javascript"></script>
+  <script src="../assets/ext_assert.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+  
+  <script src="../../src/utils.js" type="text/javascript"></script>
+  <script src="../../src/prototype-graphic.js" type="text/javascript"></script>
+  <script src="../../src/renderer/svg.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests Group object from <strong>shape/group.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"> </div>
+
+  <div id="whiteboard" style="visibility:hidden">
+  </div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+  new Test.Unit.Runner({
+    setup: function() { 
+      this.renderer = new Graphic.SVGRenderer("whiteboard");
+    },
+    
+    teardown: function() {
+    },
+        
+    testCreate: function() { with(this) {
+      var shape = new Graphic.Group(renderer) ;
+      assertInstanceOf(Graphic.Group, shape);   
+      assertEqual(0, shape.getNbELements());
+    }},   
+
+    testCreateAddRemoveElements: function() { with(this) {
+      var shape = new Graphic.Group(renderer);
+      renderer.add(shape);
+      assertEqual(1, renderer.nbShapes());
+
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200));
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(300,400)));
+      
+      assertEqual(2, shape.getNbELements());
+      assertEqual(1, renderer.nbShapes());  
+      
+      var rect = shape.get(0);
+      shape.remove(rect);
+
+      assertEqual(1, shape.getNbELements());
+      assertEqual(1, renderer.nbShapes());  
+    }},   
+    
+    testDestroy: function() { with(this) {
+      var shape = new Graphic.Group(renderer);
+      renderer.add(shape);
+      assertEqual(1, renderer.nbShapes());
+
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200));
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(300,400)));
+      
+      assertEqual(2, shape.getNbELements());
+      assertEqual(1, renderer.nbShapes());   
+      
+      shape.destroy();
+      assertEqual(0, shape.getNbELements());
+      assertEqual(0, renderer.nbShapes());   
+    }},   
+    
+    testLocation: function() { with(this) {
+      var shape = new Graphic.Group(renderer);
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(20, 30)));
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(300,400)));
+      
+      var location = shape.getLocation();
+      assertEqual(20, location.x);
+      assertEqual(30, location.y)
+    }}, 
+
+    testSize: function() { with(this) {
+      var shape = new Graphic.Group(renderer);
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(20, 30)));
+      shape.add(new Graphic.Rectangle(renderer).setSize(100, 200).setMatrix(Matrix.translate(300,400)));
+
+      var size = shape.getSize();
+      assertEqual(380, size.w);
+      assertEqual(570, size.h)
+    }}
+    
+  }, "testlog");
+// ]]>
+</script>
+</body>

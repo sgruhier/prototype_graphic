@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+
+  <script src="../lib/prototype.js" type="text/javascript"></script>
+
+  <script src="../src/prototype-graphic.js?include=tools" type="text/javascript"></script>
+  <script src="../src/renderer/svg.js" type="text/javascript"></script>
+  <script src="../src/renderer/vml.js" type="text/javascript"></script>
+  <script src="../src/renderer/canvas.js" type="text/javascript"></script>
+
+  <script src="js/test.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />  
+	<title>Test Group</title>
+	
+</head>
+
+<body>
+  <div id="content" > 
+  <h1>Group Test</h1><span id="info"></span> 
+    <script type="text/javascript">  
+      var ToolManager = null;
+      function display(renderer) {
+        if (ToolManager)
+          ToolManager.setRenderer(renderer);
+        else {
+          var group = new Graphic.Group(renderer); 
+
+          shape = new Graphic.Rectangle(renderer);
+          shape.setFill({r:27, g: 127, b: 147, a:128});
+          shape.setStroke({r:255, g: 255, b: 255});
+          shape.setBounds(0, 0, 300, 300);
+          group.add(shape);     
+
+          shape = new Graphic.Rectangle(renderer);
+          shape.setFill({r:255, g: 255, b: 255});
+          shape.setStroke({r:0, g: 0, b: 0});
+          shape.setBounds(145, -5, 10, 10);
+          group.add(shape);     
+
+          shape = new Graphic.Rectangle(renderer);
+          shape.setFill({r:255, g: 255, b: 255});
+          shape.setStroke({r:0, g: 0, b: 0});
+          shape.setBounds(-5, 145, 10, 10);
+          group.add(shape);     
+
+          shape = new Graphic.Rectangle(renderer);
+          shape.setFill({r:255, g: 255, b: 255});
+          shape.setStroke({r:0, g: 0, b: 0});
+          shape.setBounds(145, 295, 10, 10);
+          group.add(shape);     
+
+          shape = new Graphic.Rectangle(renderer);
+          shape.setFill({r:255, g: 255, b: 255});
+          shape.setStroke({r:0, g: 0, b: 0});
+          shape.setBounds(295, 145, 10, 10);
+          group.add(shape);     
+          renderer.add(group);     
+
+          group.translate(250, 100);
+          group.rotate(10, 150, 150)
+        }
+      }
+      addSelectRenderer(display);
+    </script>
+
+    <div id="whiteboard">
+    </div>
+  </div>
+</body>
+</html>
